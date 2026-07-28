@@ -2,88 +2,106 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Game Manusia Lompat</title>
 <style>
 body{
     margin:0;
-    overflow:hidden;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    height:100vh;
     background:#87CEEB;
 }
 #game{
-    width:100vw;
-    height:100vh;
+    width:800px;
+    height:300px;
+    border:3px solid #000;
+    background:#fff;
     position:relative;
+    overflow:hidden;
 }
 #player{
     width:40px;
     height:60px;
-    background:red;
-    position:absolute;
-    left:50px;
-    bottom:50px;
-}
-#ground{
-    width:100%;
-    height:50px;
-    background:green;
+    background:#1e90ff;
     position:absolute;
     bottom:0;
+    left:60px;
 }
 #obstacle{
     width:30px;
     height:60px;
-    background:black;
+    background:red;
     position:absolute;
+    bottom:0;
     right:-30px;
-    bottom:50px;
-    animation:move 2s linear infinite;
 }
-@keyframes move{
-    from{right:-30px;}
-    to{right:100%;}
-}
-.jump{
-    animation:jump 0.6s ease;
-}
-@keyframes jump{
-    0%{bottom:50px;}
-    50%{bottom:180px;}
-    100%{bottom:50px;}
+#score{
+    position:absolute;
+    top:10px;
+    left:10px;
+    font:bold 20px Arial;
 }
 </style>
 </head>
 <body>
 
 <div id="game">
+    <div id="score">Skor: 0</div>
     <div id="player"></div>
     <div id="obstacle"></div>
-    <div id="ground"></div>
 </div>
 
 <script>
 const player = document.getElementById("player");
+const obstacle = document.getElementById("obstacle");
+const scoreText = document.getElementById("score");
+
+let jumping = false;
+let score = 0;
+let obstacleX = 800;
 
 function jump(){
-    if(player.classList.contains("jump")) return;
-    player.classList.add("jump");
-    setTimeout(()=>player.classList.remove("jump"),600);
+    if(jumping) return;
+    jumping = true;
+
+    let up = setInterval(()=>{
+        let bottom = parseInt(getComputedStyle(player).bottom);
+        if(bottom >= 120){
+            clearInterval(up);
+            let down = setInterval(()=>{
+                bottom = parseInt(getComputedStyle(player).bottom);
+                if(bottom <= 0){
+                    clearInterval(down);
+                    jumping = false;
+                }else{
+                    player.style.bottom = (bottom - 5) + "px";
+                }
+            },20);
+        }else{
+            player.style.bottom = (bottom + 5) + "px";
+        }
+    },20);
 }
 
-document.addEventListener("keydown",e=>{
+document.addEventListener("keydown", e=>{
     if(e.code==="Space") jump();
 });
-
-document.addEventListener("touchstart",jump);
-
-const obstacle=document.getElementById("obstacle");
+document.addEventListener("touchstart", jump);
 
 setInterval(()=>{
-    const playerBottom=parseInt(getComputedStyle(player).bottom);
-    const obstacleLeft=obstacle.getBoundingClientRect().left;
+    obstacleX -= 5;
+    if(obstacleX < -30){
+        obstacleX = 800;
+        score++;
+        scoreText.textContent = "Skor: " + score;
+    }
+    obstacle.style.left = obstacleX + "px";
 
-    if(obstacleLeft<90 && obstacleLeft>20 && playerBottom<100){
-        alert("Game Over!");
+    let playerBottom = parseInt(getComputedStyle(player).bottom);
+
+    if(obstacleX < 100 && obstacleX > 40 && playerBottom < 50){
+        alert("Game Over!\nSkor: " + score);
         location.reload();
     }
 },20);
