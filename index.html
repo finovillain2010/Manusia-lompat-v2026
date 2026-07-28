@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎲 Ular Tangga Premium</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<div class="background"></div>
+
+<header>
+    <h1>🐍 ULAR TANGGA PREMIUM 🎲</h1>
+    <p>Capai kotak 100 untuk menjadi juara!</p>
+</header>
+
+<main>
+
+    <section class="left-panel">
+
+        <div class="player-card player1">
+            <h2>🔴 Pemain 1</h2>
+            <h3 id="p1-position">Posisi : 1</h3>
+        </div>
+
+        <div class="player-card player2">
+            <h2>🔵 Pemain 2</h2>
+            <h3 id="p2-position">Posisi : 1</h3>
+        </div>
+
+        <div class="dice-box">
+            <h2>🎲 Dadu</h2>
+
+            <div id="dice">
+                1
+            </div>
+
+            <button id="rollButton">
+                Lempar Dadu
+            </button>
+
+            <h3 id="turn">
+                Giliran Pemain 1
+            </h3>
+        </div>
+
+    </section>
+
+    <section class="board-section">
+
+        <div id="board"></div>
+
+    </section>
+
+    <section class="right-panel">
+
+        <div class="info-box">
+            <h2>📜 Aturan</h2>
+
+            <ul>
+                <li>Mulai dari kotak 1.</li>
+                <li>Naik jika bertemu tangga.</li>
+                <li>Turun jika bertemu ular.</li>
+                <li>Harus tepat di kotak 100.</li>
+            </ul>
+
+        </div>
+
+        <div class="history">
+            <h2>📖 Riwayat</h2>
+
+            <div id="log">
+
+            </div>
+
+        </div>
+
+    </section>
+
+</main>
+
+<footer>
+    <p>
+        © 2026 Game Ular Tangga Premium
+    </p>
+</footer>
+
+<script src="script.js"></script>
+
+</body>
+</html>
