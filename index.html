@@ -65,22 +65,12 @@ for(let i=0;i<jumlahPlayer;i++){
     });
 }
 
-let giliran=0;
-
-// Posisi ular: kepala -> ekor
-const snakes = {
-  17: 7,
-  54: 34,
-  62: 19,
-  98: 79
+const snake={
+17:7,
+54:34,
+62:19,
+98:79
 };
-
-// Setelah pemain bergerak
-if (snakes[playerPosition]) {
-  alert("Kena ular! Turun...");
-  playerPosition = snakes[playerPosition];
-}
-
 const ladder={
 3:22,
 8:30,
