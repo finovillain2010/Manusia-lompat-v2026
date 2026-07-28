@@ -2,27 +2,123 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Game Ular Tangga</title>
-<link rel="stylesheet" href="style.css">
+<style>
+body{
+    font-family:Arial,sans-serif;
+    background:linear-gradient(135deg,#4CAF50,#2E7D32);
+    color:white;
+    text-align:center;
+}
+#board{
+    width:600px;
+    height:600px;
+    margin:auto;
+    display:grid;
+    grid-template-columns:repeat(10,1fr);
+    border:5px solid white;
+}
+.cell{
+    border:1px solid white;
+    position:relative;
+    background:#81C784;
+    font-size:14px;
+}
+.cell:nth-child(even){
+    background:#A5D6A7;
+}
+.player{
+    width:25px;
+    height:25px;
+    background:red;
+    border-radius:50%;
+    position:absolute;
+    bottom:5px;
+    left:5px;
+}
+button{
+    padding:10px 20px;
+    font-size:20px;
+    margin:20px;
+}
+</style>
 </head>
 <body>
 
-<h1>🐍 Game Ular Tangga</h1>
-<div id="board">
-  <!-- kotak papan -->
-</div>
-<img id="player" src="player.png" width="40">
-<div id="board">
-    <img id="player" src="img/player.png" alt="Player">
-</div>
+<h1>🎲 GAME ULAR TANGGA 🎲</h1>
 
-<div class="panel">
-    <button onclick="rollDice()">🎲 Lempar Dadu</button>
-    <h2 id="dice">Dadu: -</h2>
-    <h2 id="status">Posisi: 1</h2>
-</div>
+<button onclick="rollDice()">Lempar Dadu</button>
 
-<script src="script.js"></script>
+<h2>Dadu : <span id="dice">-</span></h2>
+<h2>Posisi : <span id="pos">1</span></h2>
+
+<div id="board"></div>
+
+<script>
+const board=document.getElementById("board");
+
+for(let i=100;i>=1;i--){
+    let cell=document.createElement("div");
+    cell.className="cell";
+    cell.id="cell"+i;
+    cell.innerHTML=i;
+    board.appendChild(cell);
+}
+
+let player=document.createElement("div");
+player.className="player";
+document.getElementById("cell1").appendChild(player);
+
+let posisi=1;
+
+const snake={
+99:80,
+70:50,
+55:30,
+40:10,
+25:5
+};
+
+const ladder={
+3:22,
+8:26,
+20:38,
+28:84,
+58:77,
+71:92
+};
+
+function rollDice(){
+
+let d=Math.floor(Math.random()*6)+1;
+document.getElementById("dice").innerHTML=d;
+
+if(posisi+d<=100){
+posisi+=d;
+}
+
+if(snake[posisi]){
+alert("🐍 Digigit ular!");
+posisi=snake[posisi];
+}
+
+if(ladder[posisi]){
+alert("🪜 Naik tangga!");
+posisi=ladder[posisi];
+}
+
+document.getElementById("pos").innerHTML=posisi;
+
+document.getElementById("cell"+posisi).appendChild(player);
+
+if(posisi==100){
+setTimeout(()=>{
+alert("🏆 SELAMAT ANDA MENANG!");
+},200);
+}
+
+}
+</script>
+
 </body>
 </html>
