@@ -1,122 +1,47 @@
 <!DOCTYPE html>
-<html lang="id">
+<html>
 <head>
 <meta charset="UTF-8">
-<title>Game Run</title>
+<title>Game Lari</title>
 <style>
 body{
-    margin:0;
-    overflow:hidden;
-    background:#87CEEB;
+margin:0;
+background:#87CEEB;
+overflow:hidden;
 }
-#game{
-    width:100vw;
-    height:100vh;
-    position:relative;
-}
-#player{
-    width:50px;
-    height:50px;
-    background:red;
-    position:absolute;
-    left:80px;
-    bottom:50px;
-}
-.obstacle{
-    width:30px;
-    height:60px;
-    background:green;
-    position:absolute;
-    bottom:50px;
-}
-#ground{
-    position:absolute;
-    bottom:0;
-    width:100%;
-    height:50px;
-    background:#654321;
-}
-#score{
-    position:absolute;
-    top:10px;
-    left:10px;
-    font-size:24px;
-    font-family:Arial;
-    color:white;
+canvas{
+display:block;
+margin:auto;
+background:#7ec850;
 }
 </style>
 </head>
 <body>
 
-<div id="game">
-    <div id="score">0</div>
-    <div id="player"></div>
-    <div id="ground"></div>
-</div>
+<canvas id="game" width="800" height="300"></canvas>
 
 <script>
-const game=document.getElementById("game");
-const player=document.getElementById("player");
-const scoreText=document.getElementById("score");
+const canvas = document.getElementById("game");
+const ctx = canvas.getContext("2d");
 
-let y=0;
-let velocity=0;
-let jumping=false;
-let score=0;
+let player = {
+x:80,
+y:220,
+w:30,
+h:50,
+vy:0,
+jump:false
+};
 
-document.addEventListener("keydown",()=>{
-    if(!jumping){
-        velocity=18;
-        jumping=true;
-    }
-});
+let obstacle = {
+x:800,
+y:230,
+w:25,
+h:40
+};
 
-function createObstacle(){
-    const obs=document.createElement("div");
-    obs.className="obstacle";
-    obs.style.left=window.innerWidth+"px";
-    game.appendChild(obs);
-
-    let x=window.innerWidth;
-
-    const move=setInterval(()=>{
-        x-=6;
-        obs.style.left=x+"px";
-
-        const px=80;
-        const py=50+y;
-
-        if(x<130 && x>50 && py<110){
-            alert("Game Over!\nSkor: "+score);
-            location.reload();
-        }
-
-        if(x<-30){
-            clearInterval(move);
-            obs.remove();
-            score++;
-            scoreText.innerText=score;
-        }
-    },20);
-}
-
-setInterval(createObstacle,1800);
+let score = 0;
 
 function update(){
-    if(jumping){
-        y+=velocity;
-        velocity-=1;
 
-        if(y<=0){
-            y=0;
-            jumping=false;
-        }
-        player.style.bottom=(50+y)+"px";
-    }
-    requestAnimationFrame(update);
-}
-update();
-</script>
-
-</body>
-</html>
+player.vy += 
