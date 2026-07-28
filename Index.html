@@ -1,1 +1,86 @@
-tes
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>Game Manusia Lompat</title>
+<style>
+body{
+    margin:0;
+    background:#87CEEB;
+    overflow:hidden;
+}
+#game{
+    width:800px;
+    height:300px;
+    margin:40px auto;
+    border:3px solid #000;
+    position:relative;
+    background:#c8f7c5;
+    overflow:hidden;
+}
+#player{
+    width:40px;
+    height:60px;
+    background:#0066ff;
+    position:absolute;
+    bottom:0;
+    left:80px;
+}
+#obstacle{
+    width:30px;
+    height:50px;
+    background:red;
+    position:absolute;
+    bottom:0;
+    right:-30px;
+    animation:jalan 2s linear infinite;
+}
+@keyframes jalan{
+    from{right:-30px;}
+    to{right:830px;}
+}
+.jump{
+    animation:lompat 0.6s ease;
+}
+@keyframes lompat{
+    0%{bottom:0;}
+    50%{bottom:120px;}
+    100%{bottom:0;}
+}
+</style>
+</head>
+<body>
+
+<div id="game">
+    <div id="player"></div>
+    <div id="obstacle"></div>
+</div>
+
+<script>
+const player = document.getElementById("player");
+
+document.addEventListener("keydown", function(e){
+    if(e.code==="Space" && !player.classList.contains("jump")){
+        player.classList.add("jump");
+        setTimeout(()=>{
+            player.classList.remove("jump");
+        },600);
+    }
+});
+
+setInterval(()=>{
+    let playerBottom = parseInt(getComputedStyle(player).getPropertyValue("bottom"));
+    let obstacleLeft = document.getElementById("obstacle").getBoundingClientRect().left;
+    let playerLeft = player.getBoundingClientRect().left;
+
+    if(obstacleLeft < playerLeft + 40 &&
+       obstacleLeft > playerLeft &&
+       playerBottom < 50){
+        alert("Game Over!");
+        location.reload();
+    }
+},10);
+</script>
+
+</body>
+</html>
