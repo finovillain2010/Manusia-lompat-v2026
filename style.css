@@ -1,0 +1,94 @@
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Poppins',sans-serif;
+}
+
+body{
+    min-height:100vh;
+    background:linear-gradient(135deg,#0f172a,#1e3a8a,#2563eb);
+    overflow-x:hidden;
+    color:white;
+}
+
+.background{
+    position:fixed;
+    inset:0;
+    background:
+    radial-gradient(circle at top left,#3b82f655,transparent 40%),
+    radial-gradient(circle at bottom right,#22c55e55,transparent 40%);
+    filter:blur(60px);
+    z-index:-1;
+}
+
+header{
+    text-align:center;
+    padding:30px;
+}
+
+header h1{
+    font-size:42px;
+    font-weight:700;
+    text-shadow:0 0 15px cyan;
+}
+
+header p{
+    margin-top:8px;
+    color:#ddd;
+}
+
+main{
+    display:grid;
+    grid-template-columns:280px 1fr 280px;
+    gap:25px;
+    padding:20px;
+}
+
+.left-panel,
+.right-panel{
+    display:flex;
+    flex-direction:column;
+    gap:20px;
+}
+
+.player-card,
+.dice-box,
+.info-box,
+.history{
+    background:rgba(255,255,255,.08);
+    border:1px solid rgba(255,255,255,.2);
+    backdrop-filter:blur(15px);
+    border-radius:20px;
+    padding:20px;
+    box-shadow:0 10px 30px rgba(0,0,0,.35);
+}
+
+.player1{
+    border-left:6px solid red;
+}
+
+.player2{
+    border-left:6px solid dodgerblue;
+}
+
+.player-card h2{
+    margin-bottom:10px;
+}
+
+.board-section{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
+
+#board{
+    width:700px;
+    height:700px;
+    display:grid;
+    grid-template-columns:repeat(10,1fr);
+    grid-template-rows:repeat(10,1fr);
+    border-radius:25px;
+    overflow:hidden;
+    border:5px solid white;
+    box-shadow:0 0 
