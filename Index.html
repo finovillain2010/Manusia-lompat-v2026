@@ -2,109 +2,119 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<title>Game Manusia Lompat</title>
+<title>Mini Mario</title>
 <style>
 body{
     margin:0;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    height:100vh;
+    overflow:hidden;
     background:#87CEEB;
 }
-#game{
-    width:800px;
-    height:300px;
-    border:3px solid #000;
-    background:#fff;
-    position:relative;
-    overflow:hidden;
-}
-#player{
-    width:40px;
-    height:60px;
-    background:#1e90ff;
-    position:absolute;
-    bottom:0;
-    left:60px;
-}
-#obstacle{
-    width:30px;
-    height:60px;
-    background:red;
-    position:absolute;
-    bottom:0;
-    right:-30px;
-}
-#score{
-    position:absolute;
-    top:10px;
-    left:10px;
-    font:bold 20px Arial;
+canvas{
+    display:block;
+    margin:auto;
+    background:#87CEEB;
 }
 </style>
 </head>
 <body>
 
-<div id="game">
-    <div id="score">Skor: 0</div>
-    <div id="player"></div>
-    <div id="obstacle"></div>
-</div>
+<canvas id="game" width="900" height="400"></canvas>
 
 <script>
-const player = document.getElementById("player");
-const obstacle = document.getElementById("obstacle");
-const scoreText = document.getElementById("score");
+const canvas = document.getElementById("game");
+const ctx = canvas.getContext("2d");
 
-let jumping = false;
-let score = 0;
-let obstacleX = 800;
+const player={
+    x:50,
+    y:300,
+    w:30,
+    h:40,
+    dx:0,
+    dy:0,
+    speed:4,
+    jump:-12,
+    grounded:false
+};
 
-function jump(){
-    if(jumping) return;
-    jumping = true;
+const gravity=0.6;
 
-    let up = setInterval(()=>{
-        let bottom = parseInt(getComputedStyle(player).bottom);
-        if(bottom >= 120){
-            clearInterval(up);
-            let down = setInterval(()=>{
-                bottom = parseInt(getComputedStyle(player).bottom);
-                if(bottom <= 0){
-                    clearInterval(down);
-                    jumping = false;
-                }else{
-                    player.style.bottom = (bottom - 5) + "px";
-                }
-            },20);
-        }else{
-            player.style.bottom = (bottom + 5) + "px";
-        }
-    },20);
+const keys={};
+
+const platforms=[
+{x:0,y:340,w:900,h:60},
+{x:180,y:280,w:120,h:20},
+{x:380,y:230,w:120,h:20},
+{x:600,y:180,w:120,h:20}
+];
+
+const goal={x:830,y:280,w:20,h:60};
+
+document.addEventListener("keydown",e=>keys[e.key]=true);
+document.addEventListener("keyup",e=>keys[e.key]=false);
+
+function update(){
+
+if(keys["ArrowLeft"]) player.dx=-player.speed;
+else if(keys["ArrowRight"]) player.dx=player.speed;
+else player.dx=0;
+
+if((keys[" "]||keys["ArrowUp"])&&player.grounded){
+player.dy=player.jump;
+player.grounded=false;
 }
 
-document.addEventListener("keydown", e=>{
-    if(e.code==="Space") jump();
-});
-document.addEventListener("touchstart", jump);
+player.dy+=gravity;
+player.x+=player.dx;
+player.y+=player.dy;
 
-setInterval(()=>{
-    obstacleX -= 5;
-    if(obstacleX < -30){
-        obstacleX = 800;
-        score++;
-        scoreText.textContent = "Skor: " + score;
-    }
-    obstacle.style.left = obstacleX + "px";
+player.grounded=false;
 
-    let playerBottom = parseInt(getComputedStyle(player).bottom);
+for(let p of platforms){
+if(player.x<p.x+p.w &&
+player.x+player.w>p.x &&
+player.y+player.h>p.y &&
+player.y+player.h<p.y+20 &&
+player.dy>=0){
+player.y=p.y-player.h;
+player.dy=0;
+player.grounded=true;
+}
+}
 
-    if(obstacleX < 100 && obstacleX > 40 && playerBottom < 50){
-        alert("Game Over!\nSkor: " + score);
-        location.reload();
-    }
-},20);
+if(player.x<0) player.x=0;
+
+if(player.x+player.w>goal.x &&
+player.y+player.h>goal.y){
+alert("Selamat! Kamu Menang!");
+location.reload();
+}
+}
+
+function draw(){
+ctx.clearRect(0,0,900,400);
+
+ctx.fillStyle="#228B22";
+for(let p of platforms){
+ctx.fillRect(p.x,p.y,p.w,p.h);
+}
+
+ctx.fillStyle="red";
+ctx.fillRect(goal.x,goal.y,goal.w,goal.h);
+
+ctx.fillStyle="white";
+ctx.fillRect(goal.x+20,goal.y,30,20);
+
+ctx.fillStyle="blue";
+ctx.fillRect(player.x,player.y,player.w,player.h);
+}
+
+function game(){
+update();
+draw();
+requestAnimationFrame(game);
+}
+
+game();
 </script>
 
 </body>
