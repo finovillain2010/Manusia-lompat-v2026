@@ -224,3 +224,26 @@ function resetGame(){
 createBoard();
 
 updateText();
+
+const svg = document.getElementById("board-svg");
+
+svg.innerHTML = `
+<!-- Tangga -->
+<line x1="80" y1="620" x2="210" y2="480" stroke="#8B4513" stroke-width="6"/>
+<line x1="95" y1="620" x2="225" y2="480" stroke="#8B4513" stroke-width="6"/>
+
+<!-- Anak tangga -->
+<line x1="85" y1="600" x2="220" y2="460" stroke="#DEB887" stroke-width="3"/>
+<line x1="100" y1="570" x2="235" y2="430" stroke="#DEB887" stroke-width="3"/>
+<line x1="115" y1="540" x2="250" y2="400" stroke="#DEB887" stroke-width="3"/>
+
+<!-- Ular -->
+<path d="M500 120
+C450 180 550 220 500 280
+C450 340 550 390 500 460"
+stroke="green"
+stroke-width="10"
+fill="none"/>
+
+<circle cx="500" cy="120" r="12" fill="green"/>
+`;
