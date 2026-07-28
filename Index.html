@@ -67,21 +67,19 @@ for(let i=0;i<jumlahPlayer;i++){
 
 let giliran=0;
 
-const snake={
-17:7,
-54:34,
-62:19,
-98:79
+// Posisi ular: kepala -> ekor
+const snakes = {
+  17: 7,
+  54: 34,
+  62: 19,
+  98: 79
 };
 
-const ladder={
-3:22,
-8:30,
-28:84,
-58:77,
-75:86,
-80:99
-};
+// Setelah pemain bergerak
+if (snakes[playerPosition]) {
+  alert("Kena ular! Turun...");
+  playerPosition = snakes[playerPosition];
+}
 
 function draw(){
 
