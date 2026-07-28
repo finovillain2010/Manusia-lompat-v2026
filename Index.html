@@ -2,119 +2,120 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<title>Mini Mario</title>
+<title>Game Run</title>
 <style>
 body{
     margin:0;
     overflow:hidden;
     background:#87CEEB;
 }
-canvas{
-    display:block;
-    margin:auto;
-    background:#87CEEB;
+#game{
+    width:100vw;
+    height:100vh;
+    position:relative;
+}
+#player{
+    width:50px;
+    height:50px;
+    background:red;
+    position:absolute;
+    left:80px;
+    bottom:50px;
+}
+.obstacle{
+    width:30px;
+    height:60px;
+    background:green;
+    position:absolute;
+    bottom:50px;
+}
+#ground{
+    position:absolute;
+    bottom:0;
+    width:100%;
+    height:50px;
+    background:#654321;
+}
+#score{
+    position:absolute;
+    top:10px;
+    left:10px;
+    font-size:24px;
+    font-family:Arial;
+    color:white;
 }
 </style>
 </head>
 <body>
 
-<canvas id="game" width="900" height="400"></canvas>
+<div id="game">
+    <div id="score">0</div>
+    <div id="player"></div>
+    <div id="ground"></div>
+</div>
 
 <script>
-const canvas = document.getElementById("game");
-const ctx = canvas.getContext("2d");
+const game=document.getElementById("game");
+const player=document.getElementById("player");
+const scoreText=document.getElementById("score");
 
-const player={
-    x:50,
-    y:300,
-    w:30,
-    h:40,
-    dx:0,
-    dy:0,
-    speed:4,
-    jump:-12,
-    grounded:false
-};
+let y=0;
+let velocity=0;
+let jumping=false;
+let score=0;
 
-const gravity=0.6;
+document.addEventListener("keydown",()=>{
+    if(!jumping){
+        velocity=18;
+        jumping=true;
+    }
+});
 
-const keys={};
+function createObstacle(){
+    const obs=document.createElement("div");
+    obs.className="obstacle";
+    obs.style.left=window.innerWidth+"px";
+    game.appendChild(obs);
 
-const platforms=[
-{x:0,y:340,w:900,h:60},
-{x:180,y:280,w:120,h:20},
-{x:380,y:230,w:120,h:20},
-{x:600,y:180,w:120,h:20}
-];
+    let x=window.innerWidth;
 
-const goal={x:830,y:280,w:20,h:60};
+    const move=setInterval(()=>{
+        x-=6;
+        obs.style.left=x+"px";
 
-document.addEventListener("keydown",e=>keys[e.key]=true);
-document.addEventListener("keyup",e=>keys[e.key]=false);
+        const px=80;
+        const py=50+y;
+
+        if(x<130 && x>50 && py<110){
+            alert("Game Over!\nSkor: "+score);
+            location.reload();
+        }
+
+        if(x<-30){
+            clearInterval(move);
+            obs.remove();
+            score++;
+            scoreText.innerText=score;
+        }
+    },20);
+}
+
+setInterval(createObstacle,1800);
 
 function update(){
+    if(jumping){
+        y+=velocity;
+        velocity-=1;
 
-if(keys["ArrowLeft"]) player.dx=-player.speed;
-else if(keys["ArrowRight"]) player.dx=player.speed;
-else player.dx=0;
-
-if((keys[" "]||keys["ArrowUp"])&&player.grounded){
-player.dy=player.jump;
-player.grounded=false;
+        if(y<=0){
+            y=0;
+            jumping=false;
+        }
+        player.style.bottom=(50+y)+"px";
+    }
+    requestAnimationFrame(update);
 }
-
-player.dy+=gravity;
-player.x+=player.dx;
-player.y+=player.dy;
-
-player.grounded=false;
-
-for(let p of platforms){
-if(player.x<p.x+p.w &&
-player.x+player.w>p.x &&
-player.y+player.h>p.y &&
-player.y+player.h<p.y+20 &&
-player.dy>=0){
-player.y=p.y-player.h;
-player.dy=0;
-player.grounded=true;
-}
-}
-
-if(player.x<0) player.x=0;
-
-if(player.x+player.w>goal.x &&
-player.y+player.h>goal.y){
-alert("Selamat! Kamu Menang!");
-location.reload();
-}
-}
-
-function draw(){
-ctx.clearRect(0,0,900,400);
-
-ctx.fillStyle="#228B22";
-for(let p of platforms){
-ctx.fillRect(p.x,p.y,p.w,p.h);
-}
-
-ctx.fillStyle="red";
-ctx.fillRect(goal.x,goal.y,goal.w,goal.h);
-
-ctx.fillStyle="white";
-ctx.fillRect(goal.x+20,goal.y,30,20);
-
-ctx.fillStyle="blue";
-ctx.fillRect(player.x,player.y,player.w,player.h);
-}
-
-function game(){
 update();
-draw();
-requestAnimationFrame(game);
-}
-
-game();
 </script>
 
 </body>
