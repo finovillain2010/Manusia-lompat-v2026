@@ -2,162 +2,135 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<title>Ular Tangga</title>
-
-<style>
-body{
-    font-family:Arial;
-    background:#f2f2f2;
-    text-align:center;
-}
-
-table{
-    border-collapse:collapse;
-    margin:auto;
-}
-
-td{
-    width:45px;
-    height:45px;
-    border:1px solid black;
-    font-size:12px;
-    text-align:center;
-    vertical-align:middle;
-    background:white;
-}
-
-button{
-    padding:10px 20px;
-    font-size:18px;
-    margin:15px;
-}
-
-#info{
-    font-size:22px;
-    margin:10px;
-}
-</style>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Game Ular Tangga</title>
+<link rel="stylesheet" href="style.css">
 </head>
-
 <body>
 
-<h1>Game Ular Tangga</h1>
-
-<div id="info"></div>
-
-<button onclick="rollDice()">Lempar Dadu</button>
+<h1>🐍 Game Ular Tangga</h1>
 
 <div id="board"></div>
 
-<script>
+<div class="panel">
+    <button onclick="rollDice()">🎲 Lempar Dadu</button>
+    <h2 id="dice">Dadu: -</h2>
+    <h2 id="status">Posisi: 1</h2>
+</div>
 
-let jumlahPlayer=parseInt(prompt("Masukkan jumlah pemain (2-4)",2));
-
-if(jumlahPlayer<2) jumlahPlayer=2;
-if(jumlahPlayer>4) jumlahPlayer=4;
-
-const pemain=[];
-
-for(let i=0;i<jumlahPlayer;i++){
-    pemain.push({
-        pos:1,
-        warna:["🔴","🔵","🟢","🟡"][i]
-    });
+<script src="script.js"></script>
+</body>
+</html>
+body{
+    font-family:Arial;
+    background:#1b5e20;
+    text-align:center;
+    color:white;
 }
 
-let giliran=0;
+#board{
+    width:500px;
+    height:500px;
+    margin:auto;
+    display:grid;
+    grid-template-columns:repeat(10,1fr);
+    border:5px solid white;
+}
 
-const snake={
-17:7,
-54:34,
-62:19,
-98:79
+.cell{
+    border:1px solid #fff;
+    background:#81c784;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    font-size:14px;
+    position:relative;
+}
+
+.player{
+    width:18px;
+    height:18px;
+    background:red;
+    border-radius:50%;
+    position:absolute;
+}
+button{
+    padding:10px 20px;
+    font-size:18px;
+    margin-top:20px;
+}
+const board = document.getElementById("board");
+
+let posisi = 1;
+
+// Ular
+const snakes = {
+    98:79,
+    95:75,
+    70:55,
+    52:42,
+    25:5
 };
 
-function draw(){
+// Tangga
+const ladders = {
+    4:14,
+    9:31,
+    21:42,
+    28:84,
+    51:67,
+    72:91
+};
 
-let html="<table>";
-
-for(let r=9;r>=0;r--){
-
-html+="<tr>";
-
-for(let c=0;c<10;c++){
-
-let angka;
-
-if(r%2==0)
-angka=r*10+c+1;
-else
-angka=r*10+(10-c);
-
-let isi=angka+"<br>";
-
-pemain.forEach(p=>{
-if(p.pos==angka)
-isi+=p.warna;
-});
-
-html+="<td>"+isi+"</td>";
-
+function buatBoard(){
+    board.innerHTML="";
+    for(let i=100;i>=1;i--){
+        let cell=document.createElement("div");
+        cell.className="cell";
+        cell.id="c"+i;
+        cell.innerHTML=i;
+        board.appendChild(cell);
+    }
+    gambarPlayer();
 }
 
-html+="</tr>";
+function gambarPlayer(){
+    document.querySelectorAll(".player").forEach(e=>e.remove());
 
-}
+    let p=document.createElement("div");
+    p.className="player";
+    document.getElementById("c"+posisi).appendChild(p);
 
-html+="</table>";
-
-document.getElementById("board").innerHTML=html;
-
-document.getElementById("info").innerHTML=
-"Giliran Player "+(giliran+1)+" "+pemain[giliran].warna;
-
+    document.getElementById("status").innerHTML="Posisi: "+posisi;
 }
 
 function rollDice(){
 
-let dadu=Math.floor(Math.random()*6)+1;
+    let dadu=Math.floor(Math.random()*6)+1;
 
-alert("Dadu : "+dadu);
+    document.getElementById("dice").innerHTML="Dadu: "+dadu;
 
-let p=pemain[giliran];
+    posisi+=dadu;
 
-if(p.pos+dadu<=100)
-p.pos+=dadu;
+    if(posisi>100) posisi=100;
 
-if(ladder[p.pos]){
-alert("Naik Tangga!");
-p.pos=ladder[p.pos];
+    if(snakes[posisi]){
+        alert("🐍 Digigit ular!");
+        posisi=snakes[posisi];
+    }
+
+    if(ladders[posisi]){
+        alert("🪜 Naik tangga!");
+        posisi=ladders[posisi];
+    }
+
+    gambarPlayer();
+
+    if(posisi===100){
+        alert("🎉 Selamat! Kamu Menang!");
+        posisi=1;
+        gambarPlayer();
+    }
 }
 
-if(snake[p.pos]){
-alert("Digigit Ular!");
-p.pos=snake[p.pos];
-}
-
-if(p.pos==100){
-
-alert("Player "+(giliran+1)+" Menang!");
-
-location.reload();
-
-return;
-
-}
-
-giliran++;
-
-if(giliran>=jumlahPlayer)
-giliran=0;
-
-draw();
-
-}
-
-draw();
-
-</script>
-
-</body>
-</html>
+buatBoard();
