@@ -1,1 +1,47 @@
-tes
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Game Lari</title>
+<style>
+body{
+margin:0;
+background:#87CEEB;
+overflow:hidden;
+}
+canvas{
+display:block;
+margin:auto;
+background:#7ec850;
+}
+</style>
+</head>
+<body>
+
+<canvas id="game" width="800" height="300"></canvas>
+
+<script>
+const canvas = document.getElementById("game");
+const ctx = canvas.getContext("2d");
+
+let player = {
+x:80,
+y:220,
+w:30,
+h:50,
+vy:0,
+jump:false
+};
+
+let obstacle = {
+x:800,
+y:230,
+w:25,
+h:40
+};
+
+let score = 0;
+
+function update(){
+
+player.vy += 
